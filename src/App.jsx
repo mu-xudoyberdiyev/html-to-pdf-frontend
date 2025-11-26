@@ -62,7 +62,7 @@ export default function App() {
     const name = prompt("Enter file name (without .pdf): ", "resume");
 
     setLoading(true);
-    fetch("http://localhost:3000/save-as-pdf", {
+    fetch("https://html-to-pdf-backend-mhe9.onrender.com/save-as-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
