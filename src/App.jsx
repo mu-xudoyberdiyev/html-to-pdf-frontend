@@ -62,7 +62,7 @@ export default function App() {
     const name = prompt("Enter file name (without .pdf): ", "resume");
 
     setLoading(true);
-    fetch("https://html-to-pdf-backend-0vbp.onrender.com/save-as-pdf", {
+    fetch("https://masako-numerous-loretta.ngrok-free.dev/save-as-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
