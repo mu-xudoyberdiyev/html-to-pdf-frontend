@@ -84,7 +84,7 @@ export default function App() {
     // http://localhost:3000
 
     setLoading(true);
-    fetch("http://localhost:3000/save-as-pdf", {
+    fetch("https://masako-numerous-loretta.ngrok-free.dev/save-as-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
