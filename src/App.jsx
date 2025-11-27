@@ -6,6 +6,8 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
+import { Switch } from "./components/ui/switch";
+import { Label } from "./components/ui/label";
 
 const pdfSafeFonts = [
   "Arial",
@@ -21,21 +23,22 @@ const themes = [
   {
     title: "Dark",
     value: {
-      backgroundColor: "black",
-      color: "white",
+      backgroundColor: "black !important",
+      color: "white !important",
     },
   },
   {
     title: "Light",
     value: {
-      backgroundColor: "white",
-      color: "black",
+      backgroundColor: "white !important",
+      color: "black !important",
     },
   },
 ];
 
 export default function App() {
   const contentRef = useRef(null);
+  const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [generatedSettings, setGeneratedSettings] = useState({
@@ -59,7 +62,12 @@ export default function App() {
   }
 
   function handleClick() {
+    if (editMode) return false;
+
     const name = prompt("Enter file name (without .pdf): ", "resume");
+
+    // https://masako-numerous-loretta.ngrok-free.dev
+    // http://localhost:3000
 
     setLoading(true);
     fetch("https://masako-numerous-loretta.ngrok-free.dev/save-as-pdf", {
@@ -68,7 +76,7 @@ export default function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        html: contentRef?.current.innerHTML,
+        html: contentRef?.current.outerHTML,
       }),
     })
       .then((res) => {
@@ -106,20 +114,19 @@ export default function App() {
               );
             })}
           </NativeSelect>
-          <NativeSelect
+
+          {/* <NativeSelect
             onChange={(evt) => {
-              // const theme = themes.find(
-              //   (element) => element.title === evt.target.value
-              // );
+              const theme = themes.find(
+                (element) => element.title === evt.target.value
+              );
 
-              alert("Soon 🔜");
-
-              // setGeneratedSettings((prev) => {
-              //   return {
-              //     ...prev,
-              //     theme,
-              //   };
-              // });
+              setGeneratedSettings((prev) => {
+                return {
+                  ...prev,
+                  theme,
+                };
+              });
             }}
             defaultValue="Light"
           >
@@ -130,26 +137,44 @@ export default function App() {
                 </NativeSelectOption>
               );
             })}
-          </NativeSelect>
+          </NativeSelect> */}
         </div>
 
-        <Button onClick={handleClick} disabled={loading} variant="outline">
-          {loading ? (
-            <>
-              <UpdateIcon className="animate-spin" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <LightningBoltIcon />
-              Generate
-            </>
-          )}
-        </Button>
+        <div className="flex items-center gap-10">
+          <div className="flex items-center space-x-2">
+            <Switch
+              defaultChecked={editMode}
+              onCheckedChange={() => {
+                setEditMode(!editMode);
+              }}
+              id="edit-mode"
+            />
+            <Label htmlFor="edit-mode">Edit mode</Label>
+          </div>
+
+          <Button
+            onClick={handleClick}
+            disabled={loading || editMode}
+            variant="outline"
+          >
+            {loading ? (
+              <>
+                <UpdateIcon className="animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <LightningBoltIcon />
+                Generate
+              </>
+            )}
+          </Button>
+        </div>
       </div>
-      <div className="border rounded-md p-5 shadow-sm w-[794px] mx-auto">
+      <div className="w-[794px] mx-auto border">
         <Content
           generatedSettings={generatedSettings}
+          editMode={editMode}
           contentRef={contentRef}
         />
       </div>
