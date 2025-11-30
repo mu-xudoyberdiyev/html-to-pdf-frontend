@@ -151,17 +151,6 @@ export default function App() {
   }
 
   useEffect(() => {
-    let id;
-    id = setTimeout(() => {
-      setContentLoader(false);
-    }, 500);
-
-    return () => {
-      clearTimeout(id);
-    };
-  }, [editMode]);
-
-  useEffect(() => {
     localStorage.setItem("content", JSON.stringify(contentData));
   }, [JSON.stringify(contentData)]);
 
@@ -218,7 +207,6 @@ export default function App() {
               defaultChecked={editMode}
               onCheckedChange={() => {
                 setEditMode(!editMode);
-                setContentLoader(true);
               }}
               id="edit-mode"
             />
