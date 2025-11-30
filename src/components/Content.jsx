@@ -1,185 +1,184 @@
-import { Pencil1Icon } from "@radix-ui/react-icons";
+import { Pencil1Icon, PlusCircledIcon } from "@radix-ui/react-icons";
 import IgnoreTailwind from "./IgnoreTailwind";
 
 export default function Content({
+  contentData,
+  setContentData,
   contentRef,
   generatedSettings,
   handleImage,
   editMode,
-  img,
 }) {
   return (
     <IgnoreTailwind>
       <div
         style={{
-          padding: "20px 20px 20px 20px",
+          padding: "30px",
         }}
         ref={contentRef}
       >
-        <h1
+        {editMode === false && (
+          <h1
+            style={{
+              fontFamily: generatedSettings.fontFamily,
+              lineHeight: "1.2",
+              fontSize: "28px",
+              margin: "0px",
+              marginBottom: "15px",
+            }}
+            tabIndex={1}
+          >
+            {contentData.header.title}
+          </h1>
+        )}
+        {editMode && (
+          <input
+            onChange={(evt) => {
+              setContentData((prev) => {
+                const copy = structuredClone(prev);
+                copy.header.title = evt.target.value;
+                return copy;
+              });
+            }}
+            style={{
+              padding: "0px",
+              fontFamily: generatedSettings.fontFamily,
+              fontWeight: "700",
+              fontSize: "28px",
+              width: "100%",
+              marginBottom: "15px",
+            }}
+            defaultValue={contentData.header.title}
+            autoFocus={editMode}
+            type="text"
+          />
+        )}
+        <hr
           style={{
-            fontFamily: generatedSettings.fontFamily,
-            border: `1px solid ${editMode ? "black" : "transparent"}`,
+            margin: "0px",
           }}
-          contentEditable={editMode}
-        >
-          Mirzo Ulugbek
-        </h1>
-        <hr />
+        />
+        {/* HERO  */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "3fr 1fr",
-            gap: "10px",
+            columnGap: "20px",
+            height: "236px",
+            gridTemplateColumns: "4fr 1fr",
             marginTop: "20px",
-            marginBottom: "20px",
           }}
         >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "15px",
+              justifyContent: "space-between",
+              height: "100%",
             }}
           >
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <strong
+            {contentData.hero.content.map(({ text, label, id }) => {
+              return (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    alignItems: "start",
+                    width: "100%",
+                  }}
+                  key={id}
+                >
+                  <strong
+                    style={{
+                      fontFamily: generatedSettings.fontFamily,
+                      fontSize: "14px",
+                      lineHeight: "1.2",
+                    }}
+                  >
+                    {label}
+                  </strong>
+                  {editMode === false && (
+                    <p
+                      style={{
+                        margin: "0px",
+                        fontFamily: generatedSettings.fontFamily,
+                        fontSize: "14px",
+                        lineHeight: "1.2",
+                      }}
+                    >
+                      {text}
+                    </p>
+                  )}
+                  {editMode && (
+                    <input
+                      onChange={(evt) => {
+                        setContentData((prev) => {
+                          const copy = structuredClone(prev);
+                          const content = copy.hero.content.map((el) => {
+                            if (text === el.text) {
+                              return { ...el, text: evt.target.value };
+                            } else {
+                              return el;
+                            }
+                          });
+                          copy.hero.content = content;
+                          return copy;
+                        });
+                      }}
+                      style={{
+                        padding: "0px",
+                        fontFamily: generatedSettings.fontFamily,
+                        fontSize: "14px",
+                        lineHeight: "1.2",
+                      }}
+                      defaultValue={text}
+                      type="text"
+                    />
+                  )}
+                </div>
+              );
+            })}
+            {contentData.hero.content.length < 7 && editMode && (
+              <div
+                onClick={() => {
+                  setContentData((prev) => {
+                    const copy = structuredClone(prev);
+                    const label =
+                      prompt("Geben Sie den Abschnittsnamen ein", "...") + ":";
+                    const content = [
+                      ...copy.hero.content,
+                      { text: "...", id: window.crypto.randomUUID(), label },
+                    ];
+                    copy.hero.content = content;
+                    return copy;
+                  });
+                }}
                 style={{
-                  fontFamily: generatedSettings.fontFamily,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "4px",
+                  boxSizing: "border-box",
+                  border: "1px solid rgba(0,0,0, 0.2)",
+                  width: "100%",
+                  cursor: "pointer",
+                  bottom: "-30px",
                 }}
+                role="button"
               >
-                Name:
-              </strong>
-              <p
-                style={{
-                  margin: "0px",
-                  fontFamily: generatedSettings.fontFamily,
-                  border: `1px solid ${editMode ? "black" : "transparent"}`,
-                }}
-                contentEditable={editMode}
-              >
-                Mirzo Ulugbek
-              </p>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <strong
-                style={{
-                  fontFamily: generatedSettings.fontFamily,
-                }}
-              >
-                Address:
-              </strong>
-              <p
-                style={{
-                  margin: "0px",
-                  fontFamily: generatedSettings.fontFamily,
-                  border: `1px solid ${editMode ? "black" : "transparent"}`,
-                }}
-                contentEditable={editMode}
-              >
-                Uzbekistan, Fergana, <br /> Tadbirkorlar 186
-              </p>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <strong
-                style={{
-                  fontFamily: generatedSettings.fontFamily,
-                }}
-              >
-                Birthday:
-              </strong>
-              <p
-                style={{
-                  margin: "0px",
-                  fontFamily: generatedSettings.fontFamily,
-                  border: `1px solid ${editMode ? "black" : "transparent"}`,
-                }}
-                contentEditable={editMode}
-              >
-                02.02.1994
-              </p>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <strong
-                style={{
-                  fontFamily: generatedSettings.fontFamily,
-                }}
-              >
-                Tel:
-              </strong>
-              <p
-                style={{
-                  margin: "0px",
-                  fontFamily: generatedSettings.fontFamily,
-                  border: `1px solid ${editMode ? "black" : "transparent"}`,
-                }}
-                contentEditable={editMode}
-              >
-                +998 (99) 777 77-77
-              </p>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <strong
-                style={{
-                  fontFamily: generatedSettings.fontFamily,
-                }}
-              >
-                Email:
-              </strong>
-              <a
-                style={{
-                  fontFamily: generatedSettings.fontFamily,
-                  border: `1px solid ${editMode ? "black" : "transparent"}`,
-                }}
-                onBlur={(evt) => {
-                  evt.target.href = "mailto:" + evt.target.innerText;
-                }}
-                contentEditable={editMode}
-                href="mailto:mu.xudoyberdiyev@gmail.com"
-              >
-                mu.xudoyberdiyev@gmail.com
-              </a>
-            </div>
+                <PlusCircledIcon
+                  style={{
+                    color: "rgba(0,0,0, 0.4)",
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div
             style={{
               position: "relative",
+              width: "177px",
+              height: "100%",
             }}
           >
             {editMode && (
@@ -193,7 +192,6 @@ export default function Content({
                   position: "absolute",
                   inset: "0",
                   backgroundColor: "rgba(0,0,0,0.5)",
-                  borderRadius: "10px",
                   cursor: "pointer",
                 }}
               >
@@ -222,12 +220,12 @@ export default function Content({
               style={{
                 display: "flex",
                 objectPosition: "center",
-                objectFit: "cover",
                 width: "100%",
-                height: "240px",
-                borderRadius: "10px",
+                height: "100%",
+                objectFit: "cover",
+                aspectRatio: "3 / 4",
               }}
-              src={img}
+              src={contentData.hero.img}
             />
           </div>
         </div>

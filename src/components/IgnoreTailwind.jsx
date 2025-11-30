@@ -1,5 +1,5 @@
 // IgnoreTailwind.jsx
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 const IgnoreTailwind = ({ children }) => {
