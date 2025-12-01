@@ -47,37 +47,58 @@ const initialContentData = {
         label: "Vollständiger Name:",
         text: "Max Mustermann",
         id: window.crypto.randomUUID(),
+        deletable: false,
       },
       {
         label: "Geburtsdatum:",
         text: "tag.monat.jahr",
         id: window.crypto.randomUUID(),
+        deletable: false,
       },
       {
         label: "Anschrift:",
         text: "Straße, Stadt, PLZ",
         id: window.crypto.randomUUID(),
+        deletable: false,
       },
       {
         label: "Telefonnummer:",
         text: "+49 30 1234567",
         id: window.crypto.randomUUID(),
+        deletable: false,
       },
       {
         label: "E-Mail-Adresse:",
         text: "max@gmail.com",
         id: window.crypto.randomUUID(),
+        deletable: false,
       },
     ],
     img: imgSrc,
   },
-  main: {},
+  main: [
+    {
+      title: "Berufserfahrung",
+      deletable: true,
+      id: window.crypto.randomUUID(),
+    },
+    {
+      title: "Bildung/Qualifikation",
+      deletable: true,
+      id: window.crypto.randomUUID(),
+    },
+    {
+      title: "Sprachkenntnisse",
+      deletable: true,
+      id: window.crypto.randomUUID(),
+    },
+  ],
+  nextPages: [],
 };
 
 export default function App() {
-  const [contentData, setContentData] = useState(
-    JSON.parse(localStorage.getItem("content")) || initialContentData
-  );
+  const [contentData, setContentData] = useState(initialContentData);
+  // JSON.parse(localStorage.getItem("content")) ||
 
   const contentRef = useRef(null);
   const [editMode, setEditMode] = useState(false);
@@ -121,7 +142,7 @@ export default function App() {
   function generate() {
     if (editMode) return false;
 
-    const name = prompt("Enter file name (without .pdf): ", "resume");
+    const name = prompt("Dateiname eingeben (ohne .pdf):", "Lebenslauf");
 
     // https://masako-numerous-loretta.ngrok-free.dev
     // http://localhost:3000
@@ -140,7 +161,7 @@ export default function App() {
         return res.blob();
       })
       .then((res) => {
-        download(res, (name.trim() || "resume") + ".pdf");
+        download(res, (name.trim() || "Lebenslauf") + ".pdf");
       })
       .catch(({ message }) => {
         setError(message);
@@ -232,15 +253,17 @@ export default function App() {
           </Button>
         </div>
       </div>
-      <div className="w-[796px] border mx-auto">
-        <Content
-          contentData={contentData}
-          setContentData={setContentData}
-          generatedSettings={generatedSettings}
-          editMode={editMode}
-          handleImage={handleImage}
-          contentRef={contentRef}
-        />
+      <div className="h-[70vh] overflow-y-scroll py-10">
+        <div className="mx-auto w-full max-w-[794px]">
+          <Content
+            contentData={contentData}
+            setContentData={setContentData}
+            generatedSettings={generatedSettings}
+            editMode={editMode}
+            handleImage={handleImage}
+            contentRef={contentRef}
+          />
+        </div>
       </div>
     </div>
   );
